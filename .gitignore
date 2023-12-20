@@ -12,6 +12,7 @@ target/
 *.iml
 *.ipr
 src/main/resources/config.yml
+src/test/
 
 ### Eclipse ###
 .apt_generated
