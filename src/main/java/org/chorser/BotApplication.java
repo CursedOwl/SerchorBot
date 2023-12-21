@@ -2,8 +2,10 @@ package org.chorser;
 
 
 import org.chorser.entity.Authentication;
+import org.chorser.entity.Configuration;
+import org.chorser.entity.Conversation;
 import org.chorser.listener.DefaultListener;
-import org.chorser.util.YmlReader;
+import org.chorser.util.ConfigReader;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.slf4j.Logger;
@@ -13,17 +15,26 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.Base64;
+import java.util.List;
 
 public class BotApplication {
 
     private static final String CONFIG_PATH="config.yml";
+
+    private static Authentication authentication;
+
+    private static List<Conversation> conversations;
+
     private static final Base64.Decoder base64Decoder=Base64.getDecoder();
-    private static Logger log= LoggerFactory.getLogger(BotApplication.class);
+    private static final Logger log= LoggerFactory.getLogger(BotApplication.class);
 
     public static void main(String[] args) {
 
         try {
-            Authentication authentication = YmlReader.readAuthentication(CONFIG_PATH);
+           Configuration configuration=ConfigReader.readDefaultConfiguration(CONFIG_PATH);
+           authentication=configuration.getAuthentication();
+           conversations=configuration.getConversations();
+
             if(authentication==null){
                 throw new IOException();
             }
@@ -31,17 +42,19 @@ public class BotApplication {
                 byte[] bytes = base64Decoder.decode(authentication.getToken());
                 String token = new String(bytes);
                 authentication.setToken(token);
-                initialJavacordConnection(authentication);
+                initialJavacordConnection();
+            }else {
+                throw new IOException();
             }
 
         } catch (Exception e) {
-            log.error("Fail to read configuration");
+            log.error("Fail to read login configuration");
             throw new RuntimeException(e);
         }
 
     }
 
-    private static void initialJavacordConnection(Authentication authentication) {
+    private static void initialJavacordConnection() {
         log.info("Starting with configuration:"+authentication);
         Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 10809));
         DiscordApi api = new DiscordApiBuilder()
@@ -50,7 +63,7 @@ public class BotApplication {
                 .setAllIntents()
                 .login()
                 .join();
-        api.addListener(new DefaultListener(authentication.getApplicationID()));
+        api.addListener(new DefaultListener(authentication,conversations));
         System.out.println("You can invite the bot by using the following url: " + api.createBotInvite());
     }
 
