@@ -43,7 +43,11 @@ public class ConfigReader {
             String text = authenticationNode.path(field.getName()).asText();
             try {
                 if(text!=null&&!text.isEmpty()){
-                    field.set(authentication, text);
+                    if(field.getType().equals(Boolean.class)) {
+                        field.set(authentication, Boolean.parseBoolean(text));
+                    }else {
+                        field.set(authentication, text);
+                    }
                 }
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
@@ -65,7 +69,6 @@ public class ConfigReader {
             return null;
         }
 
-
         return conversations;
     }
 
@@ -81,7 +84,14 @@ public class ConfigReader {
         if (configNode.path("conversation").isMissingNode()) {
             configuration.setConversations(readConversations(DEFAULT_CONVERSATION_PATH));
         }else {
-            configuration.setConversations(readConversations(configNode.path("conversation").asText()));
+            JsonNode conversationNode = configNode.path("conversation");
+//            设置对话发生概率
+            configuration.setProbability(conversationNode.path("probability").isMissingNode()?
+                    1d: conversationNode.path("probability").asDouble());
+//            读取Conversation Path，读取写入
+            configuration.setConversations(readConversations(
+                    conversationNode.path("path").isMissingNode()?
+                            DEFAULT_CONVERSATION_PATH: conversationNode.path("path").asText()));
         }
 
         return configuration;

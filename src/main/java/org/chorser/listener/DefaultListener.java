@@ -16,12 +16,17 @@ import java.util.regex.Pattern;
 
 
 public class DefaultListener implements MessageCreateListener {
+    private Double probability;
     private final Long applicationID;
     private final List<Conversation> conversations;
 
     private final Random random=new Random();
     private final Gson gson=new GsonBuilder().setPrettyPrinting().create();;
     private final Logger log= LoggerFactory.getLogger(DefaultListener.class);
+
+    public void setProbability(Double probability) {
+        this.probability = probability;
+    }
 
     @Override
     public void onMessageCreate(MessageCreateEvent messageCreateEvent) {
@@ -37,6 +42,9 @@ public class DefaultListener implements MessageCreateListener {
             boolean find = matcher.find();
             dealAtEvent(messageCreateEvent,matcher.group(1));
         }else {
+            if(random.nextDouble()>probability){
+                return;
+            }
             dealReplyEvent(messageCreateEvent);
         }
 

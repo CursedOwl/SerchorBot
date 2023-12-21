@@ -21,6 +21,8 @@ public class BotApplication {
 
     private static final String CONFIG_PATH="config.yml";
 
+    private static Double probability=1d;
+
     private static Authentication authentication;
 
     private static List<Conversation> conversations;
@@ -34,14 +36,17 @@ public class BotApplication {
            Configuration configuration=ConfigReader.readDefaultConfiguration(CONFIG_PATH);
            authentication=configuration.getAuthentication();
            conversations=configuration.getConversations();
+           probability=configuration.getProbability()>1?1:configuration.getProbability();
 
             if(authentication==null){
                 throw new IOException();
             }
             if(authentication.getToken()!=null){
-                byte[] bytes = base64Decoder.decode(authentication.getToken());
-                String token = new String(bytes);
-                authentication.setToken(token);
+                if(authentication.getBase64()){
+                    byte[] bytes = base64Decoder.decode(authentication.getToken());
+                    String token = new String(bytes);
+                    authentication.setToken(token);
+                }
                 initialJavacordConnection();
             }else {
                 throw new IOException();
@@ -56,6 +61,9 @@ public class BotApplication {
 
     private static void initialJavacordConnection() {
         log.info("Starting with configuration:"+authentication);
+        DefaultListener defaultListener = new DefaultListener(authentication,conversations);
+        defaultListener.setProbability(probability);
+//        设置代理
         Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 10809));
         DiscordApi api = new DiscordApiBuilder()
                 .setProxy(proxy)
@@ -63,7 +71,7 @@ public class BotApplication {
                 .setAllIntents()
                 .login()
                 .join();
-        api.addListener(new DefaultListener(authentication,conversations));
+        api.addListener(defaultListener);
         System.out.println("You can invite the bot by using the following url: " + api.createBotInvite());
     }
 

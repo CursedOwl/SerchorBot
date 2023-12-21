@@ -5,6 +5,16 @@ public class Authentication {
 
     private String applicationID;
 
+    private Boolean base64;
+
+    public Boolean getBase64() {
+        return base64;
+    }
+
+    public void setBase64(Boolean base64) {
+        this.base64 = base64;
+    }
+
     public String getToken() {
         return token;
     }

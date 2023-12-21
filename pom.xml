@@ -15,6 +15,7 @@
     </properties>
 
     <dependencies>
+<!--        JAVACORD-->
         <dependency>
             <groupId>org.javacord</groupId>
             <artifactId>javacord</artifactId>
@@ -22,15 +23,20 @@
             <type>pom</type>
         </dependency>
 
-        <dependency>
-            <groupId>io.projectreactor</groupId>
-            <artifactId>reactor-core</artifactId>
-            <version>3.4.10</version>
-        </dependency>
+<!--        OpenAI-->
+
+
+
+<!--        工具与测试-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.13.2</version>
+        </dependency>
+        <dependency>
+            <groupId>io.projectreactor</groupId>
+            <artifactId>reactor-core</artifactId>
+            <version>3.4.10</version>
         </dependency>
         <dependency>
             <groupId>cn.hutool</groupId>
@@ -44,7 +50,6 @@
             <artifactId>slf4j-api</artifactId>
             <version>1.7.27</version>
         </dependency>
-        <!--slf4j 自带的简单日志实现 -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>

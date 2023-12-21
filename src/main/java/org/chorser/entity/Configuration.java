@@ -9,6 +9,16 @@ public class Configuration {
 
     private String conversationPath;
 
+    private Double probability;
+
+    public Double getProbability() {
+        return probability;
+    }
+
+    public void setProbability(Double probability) {
+        this.probability = probability;
+    }
+
     public String getConversationPath() {
         return conversationPath;
     }
