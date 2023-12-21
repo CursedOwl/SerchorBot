@@ -68,7 +68,17 @@ public class DefaultListener implements MessageCreateListener {
             }
         }
         if(temp!=null){
-            messageCreateEvent.getChannel().sendMessage(temp.getAnswers().get(random.nextInt(temp.getAnswers().size())));
+            String answer = temp.getAnswers().get(random.nextInt(temp.getAnswers().size()));
+
+            if (temp.getReplace()) {
+                Pattern pattern = Pattern.compile(temp.getRegex());
+                Matcher matcher = pattern.matcher(content.trim());
+                matcher.find();
+                String capture = matcher.group(1);
+                answer=answer.replaceAll("\\$\\{Capture}",capture);
+                answer=answer.replaceAll("\\$\\{Sender}",messageCreateEvent.getMessageAuthor().getDisplayName());
+            }
+            messageCreateEvent.getChannel().sendMessage(answer);
         }
 
     }

@@ -33,6 +33,7 @@ public class BotApplication {
     public static void main(String[] args) {
 
         try {
+//            读取配置文件
            Configuration configuration=ConfigReader.readDefaultConfiguration(CONFIG_PATH);
            authentication=configuration.getAuthentication();
            conversations=configuration.getConversations();

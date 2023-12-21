@@ -5,6 +5,8 @@ import java.util.ArrayList;
 public class Conversation {
     private String regex;
 
+    private Boolean replace;
+
     private Integer priority;
 
     private ArrayList<String> answers;
@@ -13,6 +15,14 @@ public class Conversation {
     public Conversation(String regex, Integer priority) {
         this.regex = regex;
         this.priority = priority;
+    }
+
+    public Boolean getReplace() {
+        return replace;
+    }
+
+    public void setReplace(Boolean replace) {
+        this.replace = replace;
     }
 
     public String getRegex() {
