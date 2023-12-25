@@ -6,10 +6,10 @@ import org.javacord.api.event.message.MessageCreateEvent;
 
 public class DefaultGPTServiceImpl extends IFunctionService {
 
-    private final OpenAiService openAiService;
+//    private final OpenAiService openAiService;
 
     public DefaultGPTServiceImpl(String token){
-        openAiService=new OpenAiService(token);
+//        openAiService=new OpenAiService(token);
     }
 
 

@@ -11,13 +11,16 @@ public class DefaultReplyServiceImpl extends IFunctionService {
 
     @Override
     public String response(String input, MessageCreateEvent event) {
-
-
-
+        if (replies.containsKey(input)) {
+            return replies.get(input);
+        }
         return null;
     }
 
 
+    public void add(String input,String answer){
+        replies.put(input,answer);
+    }
 
 
 }

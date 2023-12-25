@@ -98,27 +98,21 @@ public class DefaultListener implements MessageCreateListener {
     }
 
     private void dealFunctionEvent(MessageCreateEvent messageCreateEvent, String validContent) {
-        switch (validContent){
-            case "贴贴":{
-                messageCreateEvent.getChannel().sendMessage("哇呜！");
-                break;
+        if("对话配置".equals(validContent)){
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("设置关键对话配置如下哦：\n");
+            for (int i = 0; i < conversations.size(); i++) {
+                stringBuilder.append(i+1)
+                        .append(".")
+                        .append(conversations.get(i).getRegex())
+                        .append('\n');
             }
-            case "对话配置":{
-                StringBuilder stringBuilder = new StringBuilder();
-                stringBuilder.append("设置关键对话配置如下哦：\n");
-                for (int i = 0; i < conversations.size(); i++) {
-                    stringBuilder.append(i+1)
-                            .append(".")
-                            .append(conversations.get(i).getRegex())
-                            .append('\n');
-                }
-                messageCreateEvent.getChannel().sendMessage(stringBuilder.toString());
-                break;
-            }
-
-            case "么么":{
-                messageCreateEvent.getChannel().sendMessage("哼哼，我才不和你么么！");
-                break;
+            messageCreateEvent.getChannel().sendMessage(stringBuilder.toString());
+        }else {
+            IFunctionService iFunctionService = functions.get(validContent);
+            String response = iFunctionService.response(validContent, messageCreateEvent);
+            if(response!=null){
+                messageCreateEvent.getChannel().sendMessage(response);
             }
         }
     }

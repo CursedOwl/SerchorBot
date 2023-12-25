@@ -7,6 +7,8 @@ import org.chorser.entity.Conversation;
 import org.chorser.entity.Function;
 import org.chorser.listener.DefaultListener;
 import org.chorser.service.IFunctionService;
+import org.chorser.service.impl.DefaultGPTServiceImpl;
+import org.chorser.service.impl.DefaultReplyServiceImpl;
 import org.chorser.util.ConfigReader;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
@@ -27,7 +29,6 @@ public class BotApplication {
     private static Double probability=1d;
     private static Authentication authentication;
     private static List<Conversation> conversations;
-
     private static List<Function> functionList;
     private static final HashMap<String, IFunctionService> functions=new HashMap<>();
 
@@ -83,10 +84,18 @@ public class BotApplication {
     }
 
     private static void initialFunctions() {
+        DefaultReplyServiceImpl defaultReplyService = new DefaultReplyServiceImpl();
+        DefaultGPTServiceImpl defaultGPTService = new DefaultGPTServiceImpl(null);
+
         functionList.forEach(function -> {
             switch (function.getMode()){
                 case 1:{
-
+                    defaultReplyService.add(function.getTrigger(),function.getAnswer());
+                    functions.put(function.getTrigger(),defaultReplyService);
+                    break;
+                }
+                case 2:{
+                    functions.put(function.getTrigger(),defaultGPTService);
                 }
             }
         });
