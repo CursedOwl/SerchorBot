@@ -1,13 +1,17 @@
 package org.chorser.entity;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Conversation {
     private String regex;
 
     private Boolean replace;
 
+    private Boolean memory;
     private Integer priority;
+
+    private AtomicInteger count;
 
     private ArrayList<String> answers;
 
@@ -15,6 +19,23 @@ public class Conversation {
     public Conversation(String regex, Integer priority) {
         this.regex = regex;
         this.priority = priority;
+        count=new AtomicInteger();
+    }
+
+    public Boolean getMemory() {
+        return memory;
+    }
+
+    public void setMemory(Boolean memory) {
+        this.memory = memory;
+    }
+
+    public AtomicInteger getCount() {
+        return count;
+    }
+
+    public void setCount(AtomicInteger count) {
+        this.count = count;
     }
 
     public Boolean getReplace() {

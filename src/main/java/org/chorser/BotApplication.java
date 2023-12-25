@@ -2,9 +2,11 @@ package org.chorser;
 
 
 import org.chorser.entity.Authentication;
-import org.chorser.entity.Configuration;
+import org.chorser.config.BotConfiguration;
 import org.chorser.entity.Conversation;
+import org.chorser.entity.Function;
 import org.chorser.listener.DefaultListener;
+import org.chorser.service.IFunctionService;
 import org.chorser.util.ConfigReader;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
@@ -15,6 +17,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
 
 public class BotApplication {
@@ -22,10 +25,11 @@ public class BotApplication {
     private static final String CONFIG_PATH="config.yml";
 
     private static Double probability=1d;
-
     private static Authentication authentication;
-
     private static List<Conversation> conversations;
+
+    private static List<Function> functionList;
+    private static final HashMap<String, IFunctionService> functions=new HashMap<>();
 
     private static final Base64.Decoder base64Decoder=Base64.getDecoder();
     private static final Logger log= LoggerFactory.getLogger(BotApplication.class);
@@ -34,10 +38,11 @@ public class BotApplication {
 
         try {
 //            读取配置文件
-           Configuration configuration=ConfigReader.readDefaultConfiguration(CONFIG_PATH);
+           BotConfiguration configuration=ConfigReader.readDefaultConfiguration(CONFIG_PATH);
            authentication=configuration.getAuthentication();
            conversations=configuration.getConversations();
-           probability=configuration.getProbability()>1?1:configuration.getProbability();
+           functionList=configuration.getFunctions();
+           probability=configuration.getProbability()==null?1:configuration.getProbability();
 
             if(authentication==null){
                 throw new IOException();
@@ -48,6 +53,7 @@ public class BotApplication {
                     String token = new String(bytes);
                     authentication.setToken(token);
                 }
+                initialFunctions();
                 initialJavacordConnection();
             }else {
                 throw new IOException();
@@ -62,7 +68,7 @@ public class BotApplication {
 
     private static void initialJavacordConnection() {
         log.info("Starting with configuration:"+authentication);
-        DefaultListener defaultListener = new DefaultListener(authentication,conversations);
+        DefaultListener defaultListener = new DefaultListener(authentication,conversations,functions);
         defaultListener.setProbability(probability);
 //        设置代理
         Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 10809));
@@ -73,7 +79,17 @@ public class BotApplication {
                 .login()
                 .join();
         api.addListener(defaultListener);
-        System.out.println("You can invite the bot by using the following url: " + api.createBotInvite());
+        log.info("You can invite the bot by using the following url: " + api.createBotInvite());
+    }
+
+    private static void initialFunctions() {
+        functionList.forEach(function -> {
+            switch (function.getMode()){
+                case 1:{
+
+                }
+            }
+        });
     }
 
 }

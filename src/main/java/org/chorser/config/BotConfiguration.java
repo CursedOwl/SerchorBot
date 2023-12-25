@@ -1,15 +1,39 @@
-package org.chorser.entity;
+package org.chorser.config;
+
+import org.chorser.entity.Authentication;
+import org.chorser.entity.Conversation;
+import org.chorser.entity.Function;
 
 import java.util.List;
 
-public class Configuration {
+public class BotConfiguration {
     private Authentication authentication;
 
     private List<Conversation> conversations;
 
+    private List<Function> functions;
+
     private String conversationPath;
 
     private Double probability;
+
+    private String functionPath;
+
+    public List<Function> getFunctions() {
+        return functions;
+    }
+
+    public void setFunctions(List<Function> functions) {
+        this.functions = functions;
+    }
+
+    public String getFunctionPath() {
+        return functionPath;
+    }
+
+    public void setFunctionPath(String functionPath) {
+        this.functionPath = functionPath;
+    }
 
     public Double getProbability() {
         return probability;

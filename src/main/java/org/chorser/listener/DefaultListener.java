@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.chorser.entity.Authentication;
 import org.chorser.entity.Conversation;
+import org.chorser.service.IFunctionService;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.listener.message.MessageCreateListener;
 import org.slf4j.Logger;
@@ -19,6 +20,8 @@ public class DefaultListener implements MessageCreateListener {
     private Double probability;
     private final Long applicationID;
     private final List<Conversation> conversations;
+
+    private final HashMap<String, IFunctionService> functions;
 
     private final Random random=new Random();
     private final Gson gson=new GsonBuilder().setPrettyPrinting().create();;
@@ -40,7 +43,7 @@ public class DefaultListener implements MessageCreateListener {
             Pattern pattern = Pattern.compile("<@\\d+>\\s*(.*)");
             Matcher matcher = pattern.matcher(wholeMessageContent);
             boolean find = matcher.find();
-            dealAtEvent(messageCreateEvent,matcher.group(1));
+            dealFunctionEvent(messageCreateEvent,matcher.group(1));
         }else {
             if(random.nextDouble()>probability){
                 return;
@@ -68,12 +71,23 @@ public class DefaultListener implements MessageCreateListener {
             }
         }
         if(temp!=null){
-            String answer = temp.getAnswers().get(random.nextInt(temp.getAnswers().size()));
+            String answer;
+            if(temp.getMemory()){
+                int count=temp.getCount().incrementAndGet();
+                if(count>=temp.getAnswers().size()){
+                    temp.getCount().set(0);
+                }
+                answer=temp.getAnswers().get(count-1);
+            }else {
+                answer=temp.getAnswers().get(random.nextInt(temp.getAnswers().size()));
+            }
 
             if (temp.getReplace()) {
                 Pattern pattern = Pattern.compile(temp.getRegex());
                 Matcher matcher = pattern.matcher(content.trim());
                 matcher.find();
+
+
                 String capture = matcher.group(1);
                 answer=answer.replaceAll("\\$\\{Capture}",capture);
                 answer=answer.replaceAll("\\$\\{Sender}",messageCreateEvent.getMessageAuthor().getDisplayName());
@@ -83,21 +97,35 @@ public class DefaultListener implements MessageCreateListener {
 
     }
 
-    private void dealAtEvent(MessageCreateEvent messageCreateEvent,String validContent) {
+    private void dealFunctionEvent(MessageCreateEvent messageCreateEvent, String validContent) {
         switch (validContent){
             case "贴贴":{
                 messageCreateEvent.getChannel().sendMessage("哇呜！");
                 break;
             }
             case "对话配置":{
-                messageCreateEvent.getChannel().sendMessage(gson.toJson(conversations));
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.append("设置关键对话配置如下哦：\n");
+                for (int i = 0; i < conversations.size(); i++) {
+                    stringBuilder.append(i+1)
+                            .append(".")
+                            .append(conversations.get(i).getRegex())
+                            .append('\n');
+                }
+                messageCreateEvent.getChannel().sendMessage(stringBuilder.toString());
+                break;
+            }
+
+            case "么么":{
+                messageCreateEvent.getChannel().sendMessage("哼哼，我才不和你么么！");
                 break;
             }
         }
     }
 
-    public DefaultListener(Authentication authentication, List<Conversation> conversations) {
+    public DefaultListener(Authentication authentication, List<Conversation> conversations, HashMap<String, IFunctionService> functions) {
         this.applicationID = Long.parseLong(authentication.getApplicationID());
         this.conversations=conversations;
+        this.functions=functions;
     }
 }

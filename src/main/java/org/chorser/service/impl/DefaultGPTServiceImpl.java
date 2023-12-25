@@ -1,9 +1,10 @@
 package org.chorser.service.impl;
 
 import com.theokanning.openai.service.OpenAiService;
-import org.chorser.service.GPTService;
+import org.chorser.service.IFunctionService;
+import org.javacord.api.event.message.MessageCreateEvent;
 
-public class DefaultGPTServiceImpl implements GPTService {
+public class DefaultGPTServiceImpl extends IFunctionService {
 
     private final OpenAiService openAiService;
 
@@ -11,8 +12,9 @@ public class DefaultGPTServiceImpl implements GPTService {
         openAiService=new OpenAiService(token);
     }
 
+
     @Override
-    public String answer(String question) {
+    public String response(String input, MessageCreateEvent event) {
         return null;
     }
 }

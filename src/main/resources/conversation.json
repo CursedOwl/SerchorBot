@@ -2,10 +2,11 @@
   {
     "regex": "^(?!.*不).*呜呜.*",
     "replace": false,
+    "memory": true,
     "priority": 0,
     "answers": [
       "主播不要再呜呜了",
-      "主播呜呜我也要呜呜了",
+      "我也要呜呜了",
       "不准呜呜！",
       "QAQ"
     ]
@@ -13,6 +14,7 @@
   {
     "regex": "贴贴",
     "replace": false,
+    "memory": true,
     "priority": 0,
     "answers": [
       "我也要贴贴！",
@@ -22,6 +24,7 @@
   {
     "regex": ".*不.*呜呜",
     "replace": false,
+    "memory": false,
     "priority": 0,
     "answers": [
       "嗯嗯，不要呜呜了！"
@@ -30,14 +33,16 @@
   {
     "regex": ".*快点.*",
     "replace": false,
+    "memory": false,
     "priority": 0,
     "answers": [
       "哎呀，急什么"
     ]
   },
   {
-    "regex": "和(.*)结婚.*",
+    "regex": "^和(.*)结婚.*",
     "replace": true,
+    "memory": false,
     "priority": 0,
     "answers": [
       "恭喜${Sender}与${Capture}结婚！"
@@ -46,6 +51,7 @@
   {
     "regex": "我要.*",
     "replace": false,
+    "memory": false,
     "priority": 0,
     "answers": [
       "我也要！"
@@ -54,9 +60,19 @@
   {
     "regex": "爹",
     "replace": false,
+    "memory": false,
     "priority": 0,
     "answers": [
       "诶"
+    ]
+  },
+  {
+    "regex": "草拟吗",
+    "replace": false,
+    "memory": false,
+    "priority": 0,
+    "answers": [
+      "草我"
     ]
   }
 ]
