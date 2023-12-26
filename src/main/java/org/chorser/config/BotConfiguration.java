@@ -1,8 +1,8 @@
 package org.chorser.config;
 
-import org.chorser.entity.Authentication;
-import org.chorser.entity.Conversation;
-import org.chorser.entity.Function;
+import org.chorser.entity.config.Authentication;
+import org.chorser.entity.config.Conversation;
+import org.chorser.entity.config.Function;
 
 import java.util.List;
 

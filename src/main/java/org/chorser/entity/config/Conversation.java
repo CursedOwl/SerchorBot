@@ -1,4 +1,4 @@
-package org.chorser.entity;
+package org.chorser.entity.config;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;

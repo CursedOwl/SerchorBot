@@ -5,7 +5,7 @@ import org.javacord.api.event.message.MessageCreateEvent;
 
 import java.util.HashMap;
 
-public class DefaultReplyServiceImpl extends IFunctionService {
+public class ReplyServiceImpl extends IFunctionService {
 
     private HashMap<String,String> replies=new HashMap<>();
 

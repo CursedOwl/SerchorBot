@@ -1,14 +1,14 @@
 package org.chorser;
 
 
-import org.chorser.entity.Authentication;
+import org.chorser.entity.config.Authentication;
 import org.chorser.config.BotConfiguration;
-import org.chorser.entity.Conversation;
-import org.chorser.entity.Function;
+import org.chorser.entity.config.Conversation;
+import org.chorser.entity.config.Function;
 import org.chorser.listener.DefaultListener;
 import org.chorser.service.IFunctionService;
-import org.chorser.service.impl.DefaultGPTServiceImpl;
-import org.chorser.service.impl.DefaultReplyServiceImpl;
+import org.chorser.service.impl.GPTServiceImpl;
+import org.chorser.service.impl.ReplyServiceImpl;
 import org.chorser.util.ConfigReader;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
@@ -84,8 +84,8 @@ public class BotApplication {
     }
 
     private static void initialFunctions() {
-        DefaultReplyServiceImpl defaultReplyService = new DefaultReplyServiceImpl();
-        DefaultGPTServiceImpl defaultGPTService = new DefaultGPTServiceImpl(null);
+        ReplyServiceImpl defaultReplyService = new ReplyServiceImpl();
+        GPTServiceImpl defaultGPTService = new GPTServiceImpl(null);
 
         functionList.forEach(function -> {
             switch (function.getMode()){

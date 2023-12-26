@@ -1,4 +1,4 @@
-package org.chorser.entity;
+package org.chorser.entity.config;
 
 public class Authentication {
     private String token;

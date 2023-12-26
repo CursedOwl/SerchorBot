@@ -3,8 +3,8 @@ package org.chorser.listener;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.chorser.entity.Authentication;
-import org.chorser.entity.Conversation;
+import org.chorser.entity.config.Authentication;
+import org.chorser.entity.config.Conversation;
 import org.chorser.service.IFunctionService;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.listener.message.MessageCreateListener;

@@ -1,14 +1,13 @@
 package org.chorser.service.impl;
 
-import com.theokanning.openai.service.OpenAiService;
 import org.chorser.service.IFunctionService;
 import org.javacord.api.event.message.MessageCreateEvent;
 
-public class DefaultGPTServiceImpl extends IFunctionService {
+public class GPTServiceImpl extends IFunctionService {
 
 //    private final OpenAiService openAiService;
 
-    public DefaultGPTServiceImpl(String token){
+    public GPTServiceImpl(String token){
 //        openAiService=new OpenAiService(token);
     }
 

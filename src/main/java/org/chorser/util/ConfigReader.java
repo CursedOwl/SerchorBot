@@ -4,10 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import org.chorser.entity.Authentication;
+import org.chorser.entity.config.Authentication;
 import org.chorser.config.BotConfiguration;
-import org.chorser.entity.Conversation;
-import org.chorser.entity.Function;
+import org.chorser.entity.config.Conversation;
+import org.chorser.entity.config.Function;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
