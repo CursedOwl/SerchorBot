@@ -20,8 +20,8 @@ public class DefaultListener implements MessageCreateListener {
     private Double probability;
     private final Long applicationID;
     private final List<Conversation> conversations;
-
     private final HashMap<String, IFunctionService> functions;
+    private List<String> exceptionAnswers=new ArrayList<>();
 
     private final Random random=new Random();
     private final Gson gson=new GsonBuilder().setPrettyPrinting().create();;
@@ -110,8 +110,12 @@ public class DefaultListener implements MessageCreateListener {
             messageCreateEvent.getChannel().sendMessage(stringBuilder.toString());
         }else {
             IFunctionService iFunctionService = functions.get(validContent);
+            if(iFunctionService==null){
+                messageCreateEvent.getChannel().sendMessage(exceptionAnswers.get(random.nextInt(exceptionAnswers.size())));
+                return;
+            }
             String response = iFunctionService.response(validContent, messageCreateEvent);
-            if(response!=null){
+            if(response!=null&&!response.isEmpty()){
                 messageCreateEvent.getChannel().sendMessage(response);
             }
         }
@@ -121,5 +125,9 @@ public class DefaultListener implements MessageCreateListener {
         this.applicationID = Long.parseLong(authentication.getApplicationID());
         this.conversations=conversations;
         this.functions=functions;
+    }
+
+    public void setExceptionAnswers(List<String> exceptionAnswers) {
+        this.exceptionAnswers = exceptionAnswers;
     }
 }

@@ -25,8 +25,7 @@ public class HttpBuilder {
             if (response.body() != null) {
                 InputStream inputStream = response.body().byteStream();
                 JsonReader jsonReader = new JsonReader(new InputStreamReader(inputStream));
-                Type type = new TypeToken<List<T>>() {}.getType();
-
+                Type type = TypeToken.getParameterized(List.class, clazz).getType();
                 return gson.fromJson(jsonReader, type);
             }else {
                 throw new RuntimeException("response body is null");

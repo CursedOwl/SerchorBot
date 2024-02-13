@@ -1,13 +1,24 @@
 package org.chorser.entity.maimai;
 
-public class BaseInfo {
+import com.google.gson.annotations.SerializedName;
+
+public class BasicInfo {
     private String title;
+
     private String artist;
+
     private String genre;
+
     private int bpm;
-    private String release_date;
+
+    @SerializedName("release_date")
+    private String releaseDate;
+
     private String from;
-    private boolean is_new;
+
+    @SerializedName("is_new")
+    private boolean isNew;
+
     public String getTitle() {
         return title;
     }
@@ -40,12 +51,12 @@ public class BaseInfo {
         this.bpm = bpm;
     }
 
-    public String getRelease_date() {
-        return release_date;
+    public String getReleaseDate() {
+        return releaseDate;
     }
 
-    public void setRelease_date(String release_date) {
-        this.release_date = release_date;
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
     }
 
     public String getFrom() {
@@ -56,12 +67,12 @@ public class BaseInfo {
         this.from = from;
     }
 
-    public boolean isIs_new() {
-        return is_new;
+    public boolean isNew() {
+        return isNew;
     }
 
-    public void setIs_new(boolean is_new) {
-        this.is_new = is_new;
+    public void setNew(boolean aNew) {
+        this.isNew = aNew;
     }
 
     @Override
@@ -71,9 +82,9 @@ public class BaseInfo {
                 ", artist='" + artist + '\'' +
                 ", genre='" + genre + '\'' +
                 ", bpm=" + bpm +
-                ", release_date='" + release_date + '\'' +
+                ", release_date='" + releaseDate + '\'' +
                 ", from='" + from + '\'' +
-                ", is_new=" + is_new +
+                ", is_new=" + isNew +
                 '}';
     }
 }

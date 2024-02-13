@@ -1,5 +1,7 @@
 package org.chorser.entity.maimai;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class Song {
@@ -10,7 +12,9 @@ public class Song {
     private List<String> level;
     private List<Integer> cids;
     private List<Chart> charts;
-    private BaseInfo baseInfo;
+
+    @SerializedName("basic_info")
+    private BasicInfo basicInfo;
 
     public String getId() {
         return id;
@@ -68,12 +72,12 @@ public class Song {
         this.charts = charts;
     }
 
-    public BaseInfo getBaseInfo() {
-        return baseInfo;
+    public BasicInfo getBasicInfo() {
+        return basicInfo;
     }
 
-    public void setBaseInfo(BaseInfo baseInfo) {
-        this.baseInfo = baseInfo;
+    public void setBasicInfo(BasicInfo basicInfo) {
+        this.basicInfo = basicInfo;
     }
 
     @Override
@@ -86,7 +90,7 @@ public class Song {
                 ", level=" + level +
                 ", cids=" + cids +
                 ", charts=" + charts +
-                ", baseInfo=" + baseInfo +
+                ", basicInfo=" + basicInfo +
                 '}';
     }
 }

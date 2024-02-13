@@ -1,5 +1,9 @@
 [
   {
+    "mode": 0,
+    "answer": "主播，没有这个功能哦.."
+  },
+  {
     "mode": 1,
     "trigger": "贴贴",
     "answer": "哇呜！"
@@ -8,5 +12,10 @@
     "mode": 1,
     "trigger": "么么",
     "answer": "么么！"
+  },
+  {
+    "mode": 3,
+    "trigger": "猜歌",
+    "answer": "猜歌游戏开始了哦！"
   }
 ]
