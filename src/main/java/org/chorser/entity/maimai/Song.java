@@ -80,6 +80,13 @@ public class Song {
         this.basicInfo = basicInfo;
     }
 
+    public String getRedDS() {
+        return String.format("%.1f", ds.get(2));
+    }
+    public String getPurpleDS() {
+        return String.format("%.1f", ds.get(3));
+    }
+
     @Override
     public String toString() {
         return "Song{" +

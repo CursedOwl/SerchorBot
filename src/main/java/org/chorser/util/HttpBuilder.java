@@ -35,4 +35,17 @@ public class HttpBuilder {
             throw new RuntimeException(e);
         }
     }
+
+    public static InputStream getResponseStream(String url) {
+        Request request = new Request.Builder().url(url).build();
+        try (Response response = httpClient.newCall(request).execute()) {
+            if (response.body() != null) {
+                return response.body().byteStream();
+            }else {
+                throw new RuntimeException("response body is null");
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
