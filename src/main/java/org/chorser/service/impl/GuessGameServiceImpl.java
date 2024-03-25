@@ -60,7 +60,7 @@ public class GuessGameServiceImpl extends IFunctionService {
     }
 
     public Boolean guessGame(MessageCreateEvent event,String content){
-
+        return null;
     }
 
     public Boolean startNewGame(MessageCreateEvent event){
