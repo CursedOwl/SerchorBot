@@ -1,9 +1,15 @@
-package org.chorser.entity.common;
+package org.chorser.common;
 
 public class GuessItem {
 
     public final static Integer AMOUNT=8;
     public final static Integer INFO_AMOUNT=5;
+
+    public final static Long WAIT_TIME =500L;
+
+    public final static Long ABSTRACT_TIME=1500L;
+
+    public final static Long ANSWER_TIME=6000L;
 
     public final static int RED_NOTER=1;
     public final static int PURPLE_NOTER=2;

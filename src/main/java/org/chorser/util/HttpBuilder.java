@@ -11,7 +11,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class HttpBuilder {
 
@@ -20,12 +22,18 @@ public class HttpBuilder {
     public static final Gson gson = new Gson();
 
     public static <T> List<T> getResponseList(String url, Class<T> clazz) {
+        @SuppressWarnings("unchecked")
+        List<T> responseList=(List<T>) getResponse(url,TypeToken.getParameterized(List.class, clazz).getType());
+        return responseList;
+    }
+
+
+    public static Object getResponse(String url,Type type) {
         Request request = new Request.Builder().url(url).build();
         try (Response response = httpClient.newCall(request).execute()) {
             if (response.body() != null) {
                 InputStream inputStream = response.body().byteStream();
                 JsonReader jsonReader = new JsonReader(new InputStreamReader(inputStream));
-                Type type = TypeToken.getParameterized(List.class, clazz).getType();
                 return gson.fromJson(jsonReader, type);
             }else {
                 throw new RuntimeException("response body is null");

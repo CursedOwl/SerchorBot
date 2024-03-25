@@ -1,6 +1,7 @@
 package org.chorser;
 
 
+import com.google.gson.reflect.TypeToken;
 import org.chorser.entity.config.Authentication;
 import org.chorser.config.BotConfiguration;
 import org.chorser.entity.config.Conversation;
@@ -36,6 +37,8 @@ public class BotApplication {
     private static Authentication authentication;
     private static List<Conversation> conversations;
     private static List<Function> functionList;
+
+    private static IFunctionService guessGameServiceCopy;
     private static final List<String> exceptionAnswers=new ArrayList<>();
     private static final HashMap<String, IFunctionService> functions=new HashMap<>();
 
@@ -80,6 +83,7 @@ public class BotApplication {
         DefaultListener defaultListener = new DefaultListener(authentication,conversations,functions);
         defaultListener.setProbability(probability);
         defaultListener.setExceptionAnswers(exceptionAnswers);
+        defaultListener.setGuessGameService(guessGameServiceCopy);
 //        设置代理
         Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 10809));
         DiscordApi api = new DiscordApiBuilder()
@@ -97,11 +101,14 @@ public class BotApplication {
         ReplyServiceImpl defaultReplyService = new ReplyServiceImpl();
         GPTServiceImpl defaultGPTService = new GPTServiceImpl(null);
         List<Song> responseList = HttpBuilder.getResponseList("https://www.diving-fish.com/api/maimaidxprober/music_data", Song.class);
+        @SuppressWarnings("unchecked")
+        HashMap<Integer,List<String>> alias= (HashMap<Integer, List<String>>) HttpBuilder
+                .getResponse("https://download.fanyu.site/maimai/alias.json",new TypeToken<HashMap<Integer,List<String>>>(){}.getType() );
         if(responseList.isEmpty()){
             throw new RuntimeException("Fail to get song list");
         }
-        GuessGameServiceImpl guessGameService = new GuessGameServiceImpl(responseList);
-
+        GuessGameServiceImpl guessGameService = new GuessGameServiceImpl(responseList,alias);
+        guessGameServiceCopy=guessGameService;
         functionList.forEach(function -> {
             switch (function.getMode()){
                 case 0:{

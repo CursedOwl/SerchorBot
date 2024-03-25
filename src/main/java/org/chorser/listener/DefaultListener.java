@@ -20,6 +20,9 @@ public class DefaultListener implements MessageCreateListener {
     private Double probability;
     private final Long applicationID;
     private final List<Conversation> conversations;
+
+    //    需要设置舞萌猜歌服务专门应对普通对话
+    private IFunctionService guessGameService;
     private final HashMap<String, IFunctionService> functions;
     private List<String> exceptionAnswers=new ArrayList<>();
 
@@ -38,13 +41,14 @@ public class DefaultListener implements MessageCreateListener {
         if (messageCreateEvent.getMessageAuthor().getId()==applicationID) {
             return;
         }
-
+//        如果为艾特机器人的消息则是功能回复
         if(wholeMessageContent.contains("<@"+applicationID+">")){
             Pattern pattern = Pattern.compile("<@\\d+>\\s*(.*)");
             Matcher matcher = pattern.matcher(wholeMessageContent);
             boolean find = matcher.find();
             dealFunctionEvent(messageCreateEvent,matcher.group(1));
         }else {
+//            反之为对话回复
             if(random.nextDouble()>probability){
                 return;
             }
@@ -56,6 +60,7 @@ public class DefaultListener implements MessageCreateListener {
     private void dealReplyEvent(MessageCreateEvent messageCreateEvent) {
         String content = messageCreateEvent.getMessageContent();
         Conversation temp=null;
+//        先去查看舞萌猜歌
 
         for (Conversation conversation : conversations) {
             Pattern pattern = Pattern.compile(conversation.getRegex());
@@ -125,6 +130,10 @@ public class DefaultListener implements MessageCreateListener {
         this.applicationID = Long.parseLong(authentication.getApplicationID());
         this.conversations=conversations;
         this.functions=functions;
+    }
+
+    public void setGuessGameService(IFunctionService guessGameService) {
+        this.guessGameService = guessGameService;
     }
 
     public void setExceptionAnswers(List<String> exceptionAnswers) {
