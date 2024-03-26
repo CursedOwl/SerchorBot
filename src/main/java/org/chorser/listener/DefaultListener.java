@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import org.chorser.entity.config.Authentication;
 import org.chorser.entity.config.Conversation;
 import org.chorser.service.IFunctionService;
+import org.chorser.service.impl.GuessGameServiceImpl;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.listener.message.MessageCreateListener;
 import org.slf4j.Logger;
@@ -22,7 +23,7 @@ public class DefaultListener implements MessageCreateListener {
     private final List<Conversation> conversations;
 
     //    需要设置舞萌猜歌服务专门应对普通对话
-    private IFunctionService guessGameService;
+    private GuessGameServiceImpl guessGameService;
     private final HashMap<String, IFunctionService> functions;
     private List<String> exceptionAnswers=new ArrayList<>();
 
@@ -61,7 +62,9 @@ public class DefaultListener implements MessageCreateListener {
         String content = messageCreateEvent.getMessageContent();
         Conversation temp=null;
 //        先去查看舞萌猜歌
-
+        if(guessGameService.guessSong(messageCreateEvent,content)){
+            return;
+        }
         for (Conversation conversation : conversations) {
             Pattern pattern = Pattern.compile(conversation.getRegex());
             Matcher matcher = pattern.matcher(content);
@@ -132,7 +135,7 @@ public class DefaultListener implements MessageCreateListener {
         this.functions=functions;
     }
 
-    public void setGuessGameService(IFunctionService guessGameService) {
+    public void setGuessGameService(GuessGameServiceImpl guessGameService) {
         this.guessGameService = guessGameService;
     }
 

@@ -37,7 +37,10 @@ public class GuessGameServiceImpl extends IFunctionService {
 
     private List<String> answers=new ArrayList<>();
 
-    private final ReentrantLock reentrantLock=new ReentrantLock();
+//  newGameLock保证只有一个线程能够启动newGame
+    private final ReentrantLock newGameLock =new ReentrantLock();
+//    songLock保证只有一个线程能对currentSong处理，不管是猜歌还是启动游戏都需要获取锁
+    private final ReentrantLock songLock =new ReentrantLock();
 
     private Random random=new Random();
 
@@ -59,21 +62,46 @@ public class GuessGameServiceImpl extends IFunctionService {
         return null;
     }
 
-    public Boolean guessGame(MessageCreateEvent event,String content){
-        return null;
+    public Boolean guessSong(MessageCreateEvent event,String content){
+        if(currentSong==null){
+            return false;
+        }else {
+//            双重检查下有2种情况：
+//            1、currentSong被newGame线程设置为null，直接返回false
+//            2、songLock被guess持有，不管如何猜完才结束线程，哪怕时间过了
+            songLock.lock();
+            try{
+                if(currentSong==null){
+                    return false;
+                }
+                List<String> currentAlias = alias.get(Integer.parseInt(currentSong.getId()));
+                if(currentAlias.contains(content)){
+                    event.getChannel().sendMessage(new EmbedBuilder()
+                            .setTitle("恭喜"+event.getMessage().getAuthor().getDisplayName()+"猜对!")
+                            .setColor(Color.white));
+                    currentThread.interrupt();
+                    return true;
+                }
+            }finally {
+                songLock.unlock();
+            }
+        }
+
+        return false;
     }
 
     public Boolean startNewGame(MessageCreateEvent event){
         if(currentSong !=null){
             return false;
         }
-        reentrantLock.lock();
+        newGameLock.lock();
         try {
             if(currentSong !=null){
                 return false;
             }
             currentSong=songs.get(random.nextInt(songs.size()));
-            log.info("当前猜歌为:\n"+currentSong);
+            log.info("当前曲目信息为:\n"+currentSong);
+            log.info("当前曲目别名为:\n"+alias.get(Integer.parseInt(currentSong.getId())));
 
             currentThread=new Thread(()->{
                 try {
@@ -161,25 +189,29 @@ public class GuessGameServiceImpl extends IFunctionService {
                     messageCompletableFuture.join();
                     imagePart.delete();
                     Thread.sleep(ANSWER_TIME);
-                    event.getChannel().sendMessage(new EmbedBuilder().setTitle("这首歌的信息为")
-                            .setDescription(currentSong.toString())
-                            .setColor(Color.white));
-                    event.getChannel().sendMessage(new EmbedBuilder().setTitle("这首歌的别名信息为")
-                            .setDescription(alias.get(Integer.parseInt(currentSong.getId())).toString())
-                            .setColor(Color.white));
 
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    log.info("Thread-"+Thread.currentThread().getName()+": Interrupted");
                 }finally {
-                    currentSong=null;
+                    songLock.lock();
+                    try{
+                        event.getChannel().sendMessage(new EmbedBuilder().setTitle("这首歌的信息为")
+                                .setDescription(currentSong.toString())
+                                .setColor(Color.white));
+                        event.getChannel().sendMessage(new EmbedBuilder().setTitle("这首歌的别名信息为")
+                                .setDescription(alias.get(Integer.parseInt(currentSong.getId())).toString())
+                                .setColor(Color.white));
+                        currentSong=null;
+                        currentThread=null;
+                    }finally {
+                        songLock.unlock();
+                    }
                 }
             });
             currentThread.start();
 
-
-
         }finally {
-            reentrantLock.unlock();
+            newGameLock.unlock();
         }
         return true;
 

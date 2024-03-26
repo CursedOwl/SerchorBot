@@ -38,7 +38,7 @@ public class BotApplication {
     private static List<Conversation> conversations;
     private static List<Function> functionList;
 
-    private static IFunctionService guessGameServiceCopy;
+    private static GuessGameServiceImpl guessGameServiceCopy;
     private static final List<String> exceptionAnswers=new ArrayList<>();
     private static final HashMap<String, IFunctionService> functions=new HashMap<>();
 
