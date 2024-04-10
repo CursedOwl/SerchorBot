@@ -5,8 +5,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.chorser.entity.config.Authentication;
 import org.chorser.entity.config.Conversation;
-import org.chorser.service.IFunctionService;
-import org.chorser.service.impl.GuessGameServiceImpl;
+import org.chorser.service.IDiscordService;
+import org.chorser.service.impl.DiscGuessGameServiceImpl;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.listener.message.MessageCreateListener;
 import org.slf4j.Logger;
@@ -23,8 +23,8 @@ public class DefaultListener implements MessageCreateListener {
     private final List<Conversation> conversations;
 
     //    需要设置舞萌猜歌服务专门应对普通对话
-    private GuessGameServiceImpl guessGameService;
-    private final HashMap<String, IFunctionService> functions;
+    private DiscGuessGameServiceImpl guessGameService;
+    private final HashMap<String, IDiscordService> functions;
     private List<String> exceptionAnswers=new ArrayList<>();
 
     private final Random random=new Random();
@@ -106,7 +106,9 @@ public class DefaultListener implements MessageCreateListener {
     }
 
     private void dealFunctionEvent(MessageCreateEvent messageCreateEvent, String validContent) {
-        if("对话配置".equals(validContent)){
+        String triggerContent = validContent.contains("-")?validContent.substring(0,validContent.indexOf('-')):validContent;
+
+        if(triggerContent.contains("对话配置")){
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append("设置关键对话配置如下哦：\n");
             for (int i = 0; i < conversations.size(); i++) {
@@ -117,7 +119,7 @@ public class DefaultListener implements MessageCreateListener {
             }
             messageCreateEvent.getChannel().sendMessage(stringBuilder.toString());
         }else {
-            IFunctionService iFunctionService = functions.get(validContent);
+            IDiscordService iFunctionService = functions.get(triggerContent);
             if(iFunctionService==null){
                 messageCreateEvent.getChannel().sendMessage(exceptionAnswers.get(random.nextInt(exceptionAnswers.size())));
                 return;
@@ -129,13 +131,13 @@ public class DefaultListener implements MessageCreateListener {
         }
     }
 
-    public DefaultListener(Authentication authentication, List<Conversation> conversations, HashMap<String, IFunctionService> functions) {
+    public DefaultListener(Authentication authentication, List<Conversation> conversations, HashMap<String, IDiscordService> functions) {
         this.applicationID = Long.parseLong(authentication.getApplicationID());
         this.conversations=conversations;
         this.functions=functions;
     }
 
-    public void setGuessGameService(GuessGameServiceImpl guessGameService) {
+    public void setGuessGameService(DiscGuessGameServiceImpl guessGameService) {
         this.guessGameService = guessGameService;
     }
 

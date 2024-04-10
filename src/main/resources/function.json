@@ -1,5 +1,10 @@
 [
   {
+    "mode": -1,
+    "trigger": "配置",
+    "answer": ""
+  },
+  {
     "mode": 0,
     "answer": "主播，没有这个功能哦.."
   },
@@ -17,5 +22,10 @@
     "mode": 3,
     "trigger": "猜歌",
     "answer": "猜歌游戏开始了哦！"
+  },
+  {
+    "mode": 4,
+    "trigger": "Gemini",
+    "answer": ""
   }
 ]

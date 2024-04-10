@@ -1,9 +1,9 @@
 package org.chorser.service.impl;
 
-import org.chorser.service.IFunctionService;
+import org.chorser.service.IDiscordService;
 import org.javacord.api.event.message.MessageCreateEvent;
 
-public class WordleServiceImpl extends IFunctionService {
+public class DiscWordleServiceImpl extends IDiscordService {
     @Override
     public String response(String input, MessageCreateEvent event) {
         String word="apple";

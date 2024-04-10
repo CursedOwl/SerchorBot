@@ -1,6 +1,6 @@
 package org.chorser.common;
 
-public class GuessItem {
+public class GuessItemConstants {
 
     public final static Integer AMOUNT=8;
     public final static Integer INFO_AMOUNT=5;

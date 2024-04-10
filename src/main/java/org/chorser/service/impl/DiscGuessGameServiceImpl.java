@@ -2,7 +2,7 @@ package org.chorser.service.impl;
 
 import org.chorser.entity.maimai.Chart;
 import org.chorser.entity.maimai.Song;
-import org.chorser.service.IFunctionService;
+import org.chorser.service.IDiscordService;
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.message.MessageCreateEvent;
@@ -20,10 +20,12 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.locks.ReentrantLock;
 
-import static org.chorser.common.GuessItem.*;
+import static org.chorser.common.GuessItemConstants.*;
 
 
-public class GuessGameServiceImpl extends IFunctionService {
+public class DiscGuessGameServiceImpl extends IDiscordService {
+
+    private Boolean endGame=false;
 
     private Song currentSong;
 
@@ -44,7 +46,7 @@ public class GuessGameServiceImpl extends IFunctionService {
 
     private Random random=new Random();
 
-    private final Logger log= LoggerFactory.getLogger(GuessGameServiceImpl.class);
+    private final Logger log= LoggerFactory.getLogger(DiscGuessGameServiceImpl.class);
 
 
 
@@ -74,15 +76,22 @@ public class GuessGameServiceImpl extends IFunctionService {
                 if(currentSong==null){
                     return false;
                 }
+                if("结束猜歌".equals(content)){
+                    endGame=true;
+                    return true;
+                }
                 List<String> currentAlias = alias.get(Integer.parseInt(currentSong.getId()));
                 if(currentAlias.contains(content)){
                     event.getChannel().sendMessage(new EmbedBuilder()
                             .setTitle("恭喜"+event.getMessage().getAuthor().getDisplayName()+"猜对!")
                             .setColor(Color.white));
-                    currentThread.interrupt();
                     return true;
                 }
             }finally {
+                if(currentThread!=null){
+                    currentThread.interrupt();
+                    currentThread=null;
+                }
                 songLock.unlock();
             }
         }
@@ -195,12 +204,16 @@ public class GuessGameServiceImpl extends IFunctionService {
                 }finally {
                     songLock.lock();
                     try{
-                        event.getChannel().sendMessage(new EmbedBuilder().setTitle("这首歌的信息为")
-                                .setDescription(currentSong.toString())
-                                .setColor(Color.white));
-                        event.getChannel().sendMessage(new EmbedBuilder().setTitle("这首歌的别名信息为")
-                                .setDescription(alias.get(Integer.parseInt(currentSong.getId())).toString())
-                                .setColor(Color.white));
+//                        endGame代表是否是手动结束，手动结束就不会显示答案
+                        if(!endGame){
+                            event.getChannel().sendMessage(new EmbedBuilder().setTitle("这首歌的信息为")
+                                    .setDescription(currentSong.toString())
+                                    .setColor(Color.white));
+                            event.getChannel().sendMessage(new EmbedBuilder().setTitle("这首歌的别名信息为")
+                                    .setDescription(alias.get(Integer.parseInt(currentSong.getId())).toString())
+                                    .setColor(Color.white));
+                            endGame=false;
+                        }
                         currentSong=null;
                         currentThread=null;
                     }finally {
@@ -232,7 +245,7 @@ public class GuessGameServiceImpl extends IFunctionService {
     }
 
 
-    public GuessGameServiceImpl(List<Song> songs,HashMap<Integer,List<String>> alias) {
+    public DiscGuessGameServiceImpl(List<Song> songs, HashMap<Integer,List<String>> alias) {
         this.songs = songs;
         this.alias=alias;
     }

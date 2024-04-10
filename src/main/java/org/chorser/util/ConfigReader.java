@@ -122,8 +122,13 @@ public class ConfigReader {
             JsonNode functionNode = configNode.path("function");
             configuration.setFunctionPath(functionNode.path("path").isMissingNode()?
                     DEFAULT_FUNCTION_PATH: functionNode.path("path").asText());
+//            读取GPT-TOKEN
+            configuration.setGptToken(functionNode.path("gpt-token").asText());
+//            读取Gemini-API-KEY
+            configuration.setGeminiApiKey(functionNode.path("gemini-api-key").asText());
         }
         configuration.setFunctions(readFunctions(configuration.getFunctionPath()));
+
 
         return configuration;
 

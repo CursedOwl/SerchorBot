@@ -1,11 +1,11 @@
 package org.chorser.service.impl;
 
-import org.chorser.service.IFunctionService;
+import org.chorser.service.IDiscordService;
 import org.javacord.api.event.message.MessageCreateEvent;
 
 import java.util.HashMap;
 
-public class ReplyServiceImpl extends IFunctionService {
+public class DiscReplyServiceImpl extends IDiscordService {
 
     private HashMap<String,String> replies=new HashMap<>();
 

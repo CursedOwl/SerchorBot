@@ -19,6 +19,26 @@ public class BotConfiguration {
 
     private String functionPath;
 
+    private String gptToken;
+
+    private String geminiApiKey;
+
+    public String getGeminiApiKey() {
+        return geminiApiKey;
+    }
+
+    public void setGeminiApiKey(String geminiApiKey) {
+        this.geminiApiKey = geminiApiKey;
+    }
+
+    public String getGptToken() {
+        return gptToken;
+    }
+
+    public void setGptToken(String gptToken) {
+        this.gptToken = gptToken;
+    }
+
     public List<Function> getFunctions() {
         return functions;
     }
