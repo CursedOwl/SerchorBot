@@ -35,7 +35,6 @@ public class DiscActionRowServiceImpl extends IDiscordService {
         String timeFormat= conversationTime>60? String.format("%dmin",conversationTime/60): String.format("%ds",conversationTime);
         new MessageBuilder().append("Gemini保持对话时长").addComponents(
                         ActionRow.of(SelectMenu.create( ID_GEMINI_CONVERSATION_TIME, timeFormat, 1, 1, Arrays.asList(
-                                SelectMenuOption.create("0s", OPTION_GEMINI_TIME_0S),
                                 SelectMenuOption.create("30s", OPTION_GEMINI_TIME_30S),
                                 SelectMenuOption.create("1min", OPTION_GEMINI_TIME_1MIN),
                                 SelectMenuOption.create("5min", OPTION_GEMINI_TIME_5MIN),

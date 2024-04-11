@@ -22,6 +22,11 @@ public class Content {
             return this;
         }
 
+        public Builder addParts(List<Part> parts){
+            this.parts.addAll(parts);
+            return this;
+        }
+
         public Content build(){
             return new Content(this);
         }
@@ -47,5 +52,13 @@ public class Content {
 
     public void setParts(List<Part> parts) {
         this.parts = parts;
+    }
+
+    @Override
+    public String toString() {
+        return "Content{" +
+                "role='" + role + '\'' +
+                ", parts=" + parts +
+                '}';
     }
 }

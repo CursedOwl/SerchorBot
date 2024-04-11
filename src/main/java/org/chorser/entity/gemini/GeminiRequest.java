@@ -16,6 +16,11 @@ public class GeminiRequest {
             return this;
         }
 
+        public Builder addContents(List<Content> content){
+            contents.addAll(content);
+            return this;
+        }
+
         public GeminiRequest build(){
             return new GeminiRequest(this);
         }
@@ -32,5 +37,12 @@ public class GeminiRequest {
 
     public void setContents(List<Content> contents) {
         this.contents = contents;
+    }
+
+    @Override
+    public String toString() {
+        return "GeminiRequest{" +
+                "contents=" + contents +
+                '}';
     }
 }
